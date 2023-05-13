@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Post by - {{ post.author }}{% endblock %}
+{% block content %}
+{% if messages %}
+<ul class="alert alert-danger">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+</ul>
+{% endif %}
+
+<body>
+    <div class="content">
+        <h1>{{ post.title }}</h1><br>
+        <small>- Posted on {{ post.date_posted|date:"F d, Y \a\\t H:i" }}by <a class="link-info"
+                href="{% url 'author_posts' user_id=post.author.id %}">{{post.author}}</a></small>
+        <hr><br>
+        <h3>
+            {{ post.body|linebreaks }}
+        </h3><br>
+        <div class="row">
+            <div class="col-md-6">
+                <a button type="button" class="btn btn-outline-info" href="{% url 'home' %}">Back</a>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+                {% if user.is_authenticated and user == post.author or user.is_superuser %}
+                <a button type="button" class="btn btn-outline-info mx-3"
+                    href="{% url 'post_update' pk=post.pk %}">Update</a>
+                {% endif %}
+
+                {% if user.is_authenticated and user == post.author or user.is_superuser %}
+                <a button type="button" class="btn btn-outline-danger"
+                    href="{% url 'post_delete' pk=post.pk %}">Delete</a>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Comments -->
+
+    <div class="content mt-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-8">
+                <div class="d-flex flex-column comment-section">
+                    {% for comment in post.comments.all %}
+                    <div class="p-2">
+                        <div class="d-flex flex-row user-info">
+                            <div class="d-flex flex-column justify-content-start ml-2">
+                                <a class="link-info"
+                                    href="{% url 'author_posts' user_id=comment.author.id %}">{{comment.author.username}}</a>
+                                <span class="date text-cyan-50">{{ comment.date_posted }}</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <p class="comment-text">{{ comment.body }}</p>
+                            <div class="col-md-6 d-flex justify-content-end">
+                                {% if user.is_authenticated and user == comment.author or user.is_superuser %}
+                                <a button type="button" class="btn btn-info btn-sm mx-3"
+                                    href="{% url 'comment_update' post_pk=post.pk pk=comment.pk %}">Update</a>
+                                {% endif %}
+
+                                {% if user.is_authenticated and user == comment.author or user.is_superuser %}
+                                <a button type="button" class="btn btn-danger btn-sm"
+                                    href="{% url 'comment_delete' pk=comment.pk %}">Delete</a>
+                                {% endif %}
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No comments yet.</p>
+                    {% endfor %}
+                    {% if request.user.is_authenticated %}
+                    <small>Add a comment</small>
+                    <div class="d-flex flex-row align-items-start">
+                        <form method="post" class="w-100" action="{% url 'post_comment' post.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="author" value="{{ request.user.pk }}">
+                            <textarea class="form-control ml-1 shadow-none textarea" name="body"></textarea>
+                            <button type="submit" class="btn btn-outline-info btn-sm shadow-none mt-2">Post
+                                comment</button>
+                            <button type="button" class="btn btn-outline-info btn-sm ml-1 shadow-none mt-2"
+                                data-dismiss="modal">Cancel</button>
+                        </form>
+                        {% else %}
+                        <small>Login to add a comment</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+{% endblock %}

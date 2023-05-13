@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}EDEN - Profile{% endblock %}
+{% block content %}
+<h1>{{ user.username }}'s Creations</h1>
+<hr>
+{% for post in posts %}
+<div class="post">
+    <h3><a class="link-info" href="{% url 'post_detail' pk=post.id %}" style="font-size: smaller">{{ post.title }}</a></h3>
+    <p>{{ post.content }}</p>
+</div>
+{% empty %}
+<p>No posts found.</p>
+{% endfor %}
+{% endblock %}

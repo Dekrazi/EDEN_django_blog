@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="alert-info text-center">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+</div>
+
+<script>
+    setTimeout(function () {
+        var alert = document.querySelector('.alert-info');
+        alert.style.display = 'none';
+    }, 3000); // set the delay in milliseconds (5 seconds in this example)
+</script>
+
+
+<div class="content">
+    <div class="row content">
+        <h1 class="text-center"><a>
+                {% if user.is_authenticated %}
+                Welcome to EDEN - {{ user.username }}!
+                {% else %}
+                Welcome to EDEN</a>
+            {% endif %}
+        </h1>
+    </div>
+    <h2>Posts</h2><br>
+
+    <hr><br>
+    <ul>
+        {% for post in object_list %}
+        <li><a href="{% url 'post_detail' post.pk %}" class="text-light post-title">{{ post.title }}</a>
+            - Posted on {{ post.date_posted|date:"F d, Y \a\\t H:i" }} - by <a class="link-info"
+                href="{% url 'author_posts' user_id=post.author.id %}">{{post.author}}</a>
+            <br><br>
+            <p class="post-body">{{ post.body|linebreaks }}
+                <hr>
+            </p>
+        </li>
+        <br>
+        {% endfor %}
+    </ul>
+
+    <nav aria-label="...">
+        <ul class="pagination pagination-lg container-fluid d-flex align-items-center justify-content-end">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="btn btn-outline-info mx-1" href="?page=1">First</a></li>
+            <li class="page-item"><a class="btn btn-outline-info mx-1"
+                    href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="btn btn-outline-info mx-1"
+                    href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="btn btn-outline-info mx-1"
+                    href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}EDEN - Results{% endblock %}
+
+{% block content %}
+{% if results %}
+    <h1>Search Results for "{{ query }}"</h1>
+    <ul>
+        {% for post in results %}
+            <li>
+                <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+                <p>Author: {{ post.author }}</p>
+                <p>Tags: {{ post.title_tag }}</p>
+                {% if 'title' in query %}
+                    <p><strong>Found in title:</strong> {{ post.title }}</p>
+                {% endif %}
+                {% if 'body' in query %}
+                    <p><strong>Found in body:</strong> {{ post.body }}</p>
+                {% endif %}
+                {% if 'tags' in query %}
+                    <p><strong>Found in tags:</strong> {{ post.title_tag }}</p>
+                {% endif %}
+                {% if 'user' in query %}
+                    <p><strong>Found in username:</strong> {{ post.author.username }}</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+
+{% endblock %}

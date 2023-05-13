@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}EDEN - Creation{% endblock %}
+{% block content %}
+
+<div class="row content">
+    <form method="post" action="{% url 'comment_update' pk=comment.pk %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            {{ form.body.label_tag }}<br>
+            {{ form.body }}
+            {% if form.body.errors %}
+                <div class="text-danger">
+                    {{ form.body.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <input type="hidden" name="pk" value="{{ comment.pk }}">
+        <button type="submit" class="btn btn-outline-info">Update</button>
+    </form>
+</div>
+
+{% endblock %}

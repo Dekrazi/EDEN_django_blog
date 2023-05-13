@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}EDEN - Creation{% endblock %}
+{% block content %}
+
+<div class="row content">
+    <form method="post" action="{% url 'post_create' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.title.label_tag }}<br>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="text-danger">
+                    {{ form.title.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.body.label_tag }}<br>
+            {{ form.body }}
+            {% if form.body.errors %}
+                <div class="text-danger">
+                    {{ form.body.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.title_tag.label_tag }}<br>
+            {{ form.title_tag }}
+            <small class="form-text text-muted">Separate multiple tags with commas.</small>
+            {% if form.title_tag.errors %}
+                <div class="text-danger">
+                    {{ form.title_tag.errors }}
+                </div>
+            {% endif %}
+        </div><br>
+        <button type="submit" class="btn btn-outline-info">Add Post</button>
+    </form>
+</div>
+{% block scripts %}
+    <script>
+        document.getElementById("id_title").setAttribute("placeholder", "Enter a title");
+        document.getElementById("id_body").setAttribute("placeholder", "Enter the post content");
+        document.getElementById("id_title_tag").setAttribute("placeholder", "Enter tags");
+    </script>
+{% endblock scripts %}
+
+{% endblock %}
