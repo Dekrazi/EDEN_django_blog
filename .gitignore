@@ -4,7 +4,6 @@ env/
 __pycache__
 .env
 .vscode/
-db.sqlite3
 /logs/
 *.log
 /settings/production.py
